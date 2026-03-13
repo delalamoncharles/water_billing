@@ -8,45 +8,212 @@ $row = $result->fetch_assoc();
 
 if(isset($_POST['update'])){
 
-$name = $_POST['name'];
-$email = $_POST['email'];
-$course = $_POST['course'];
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $course = $_POST['course'];
 
-$sql = "UPDATE users 
-SET name='$name', email='$email', course='$course'
-WHERE id=$id";
+    $sql = "UPDATE users 
+    SET name='$name', email='$email', course='$course'
+    WHERE id=$id";
 
-$conn->query($sql);
+    $conn->query($sql);
 
-header("Location: index.php");
-
+    header("Location: index.php");
+    exit();
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit User</title>
-</head>
+<style>
+/* Full-screen dim-blue cyber-network background */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0b0d1a; /* Dark navy */
+}
 
+/* Canvas for animated network lines */
+#network {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Centered glass card */
+.edit-container {
+    position: relative;
+    background: rgba(10, 20, 40, 0.6); /* darker dim-blue */
+    backdrop-filter: blur(20px);
+    padding: 40px 50px;
+    border-radius: 20px;
+    width: 400px;
+    box-shadow: 0 15px 30px rgba(0, 0, 20, 0.7);
+    color: #cce0ff; /* light blue text */
+    text-align: center;
+    border: 1px solid rgba(100,150,255,0.2);
+}
+
+/* Input fields */
+input[type="text"], input[type="email"] {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: rgba(50,60,90,0.2);
+    color: #cce0ff;
+    box-shadow: inset 0 2px 5px rgba(0,0,50,0.5);
+    transition: 0.3s;
+}
+
+input::placeholder {
+    color: rgba(180,200,255,0.5);
+}
+
+input:focus {
+    background: rgba(50,60,90,0.3);
+    box-shadow: 0 0 10px #66a3ff, 0 0 20px #3366cc;
+}
+
+/* Button */
+button {
+    width: 95%;
+    padding: 14px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #3366cc, #6699ff);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.4s;
+    box-shadow: 0 5px 15px rgba(0,0,50,0.5);
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,80,0.7);
+}
+
+/* Heading */
+h2 {
+    color: #66a3ff;
+    font-size: 28px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px #3366cc, 0 0 20px #6699ff;
+}
+</style>
+</head>
 <body>
 
-<h2>Edit User</h2>
+<canvas id="network"></canvas>
 
-<form method="POST">
+<div class="edit-container">
+    <h2>Edit User</h2>
+    <form method="POST">
+        <input type="text" name="name" value="<?php echo htmlspecialchars($row['name']); ?>" placeholder="Name" required><br>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" placeholder="Email" required><br>
+        <input type="text" name="course" value="<?php echo htmlspecialchars($row['course']); ?>" placeholder="Course" required><br>
+        <button type="submit" name="update">Update</button>
+    </form>
+</div>
 
-Name:<br>
-<input type="text" name="name" value="<?php echo $row['name']; ?>"><br><br>
+<script>
+// JavaScript for animated network lines and nodes in dim blue
+const canvas = document.getElementById('network');
+const ctx = canvas.getContext('2d');
 
-Email:<br>
-<input type="email" name="email" value="<?php echo $row['email']; ?>"><br><br>
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-Course:<br>
-<input type="text" name="course" value="<?php echo $row['course']; ?>"><br><br>
+let nodes = [];
+const nodeCount = 80;
 
-<button type="submit" name="update">Update</button>
+// Node constructor
+class Node {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.3; // slower motion
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.radius = 2 + Math.random() * 2;
+    }
 
-</form>
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#66a3ff';
+        ctx.fill();
+    }
+}
+
+// Initialize nodes
+for(let i=0;i<nodeCount;i++){
+    nodes.push(new Node());
+}
+
+// Draw lines between close nodes
+function connectNodes() {
+    for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+            const dx = nodes[i].x - nodes[j].x;
+            const dy = nodes[i].y - nodes[j].y;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            if(distance < 150){
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(102,163,255,${1 - distance/150})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(nodes[i].x, nodes[i].y);
+                ctx.lineTo(nodes[j].x, nodes[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+// Animation loop
+function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    nodes.forEach(node => {
+        node.update();
+        node.draw();
+    });
+    connectNodes();
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+// Resize canvas
+window.addEventListener('resize', ()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
 
 </body>
 </html>

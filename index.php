@@ -16,28 +16,28 @@ $result = $conn->query($sql);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Users List - Water Billing System</title>
 <style>
-    /* Global Styles */
+    /* Full-screen background stays the same */
     body, html {
         margin: 0;
         padding: 0;
         height: 100%;
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #4da6ff, #00bfff);
+        background: linear-gradient(135deg, #0b0f1a, #001f3f);
         display: flex;
         justify-content: center;
         align-items: center;
+        color: #fff;
     }
 
-    /* Container */
+    /* Container – Electric Blue futuristic style */
     .container {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(15px);
+        background: rgba(0,0,40,0.85);
+        backdrop-filter: blur(20px);
         border-radius: 20px;
-        padding: 40px 40px 80px 40px; /* extra bottom padding for logout button */
+        padding: 40px 40px 80px 40px;
         width: 90%;
         max-width: 900px;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        color: #fff;
+        box-shadow: 0 20px 40px rgba(0,0,80,0.8);
         text-align: center;
         animation: fadeIn 1s ease-in-out;
     }
@@ -50,92 +50,85 @@ $result = $conn->query($sql);
     h2 {
         color: #00f0ff;
         margin-bottom: 20px;
-        text-shadow: 1px 1px 5px rgba(0,255,255,0.5);
+        text-shadow: 0 0 15px #00f0ff, 0 0 25px #00aaff;
     }
 
-    a.button {
+    /* Buttons */
+    a.button, .logout-btn, td a {
         display: inline-block;
         padding: 10px 20px;
-        margin: 10px 5px;
-        border-radius: 10px;
-        background: linear-gradient(90deg, #00e5ff, #0077cc);
+        margin: 5px;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #00f0ff, #004cff);
         color: #fff;
         text-decoration: none;
         font-weight: bold;
         transition: 0.3s;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 20px rgba(0,255,255,0.5);
     }
 
-    a.button:hover {
-        background: linear-gradient(90deg, #0077cc, #00e5ff);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    a.button:hover, .logout-btn:hover, td a:hover {
+        background: linear-gradient(90deg, #004cff, #00f0ff);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 12px 30px rgba(0,255,255,0.8);
     }
 
+    /* Table */
     table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 10px;
+        background: rgba(0,0,60,0.5);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        box-shadow: inset 0 0 15px rgba(0,255,255,0.2);
     }
 
     th, td {
         padding: 12px 15px;
         text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
+        border-bottom: 1px solid rgba(0,255,255,0.2);
     }
 
     th {
-        background: rgba(0,255,255,0.2);
+        background: rgba(0,240,255,0.2);
         color: #00f0ff;
         text-transform: uppercase;
         letter-spacing: 1px;
+        text-shadow: 0 0 5px #00f0ff;
     }
 
     tr:hover {
-        background: rgba(0,255,255,0.1);
+        background: rgba(0,240,255,0.05);
     }
 
     td a {
-        padding: 5px 12px;
-        border-radius: 8px;
-        background: linear-gradient(90deg, #00e5ff, #0077cc);
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #00f0ff, #004cff);
         color: #fff;
         text-decoration: none;
-        font-size: 14px;
         transition: 0.3s;
         margin: 0 2px;
     }
 
     td a:hover {
-        background: linear-gradient(90deg, #0077cc, #00e5ff);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        background: linear-gradient(90deg, #004cff, #00f0ff);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 15px rgba(0,255,255,0.5);
     }
 
     /* Logout button at bottom */
     .logout-btn {
-        display: inline-block;
         margin-top: 30px;
         padding: 12px 30px;
         border-radius: 12px;
-        background: linear-gradient(90deg, #00e5ff, #0077cc);
-        color: #fff;
-        text-decoration: none;
+        background: linear-gradient(90deg, #00f0ff, #004cff);
         font-weight: bold;
+        box-shadow: 0 8px 20px rgba(0,255,255,0.5);
         transition: 0.3s;
-        box-shadow: 0 5px 12px rgba(0,0,0,0.3);
     }
-
-    .logout-btn:hover {
-        background: linear-gradient(90deg, #0077cc, #00e5ff);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-    }
-
 </style>
 </head>
 <body>
